@@ -26,7 +26,7 @@ Public Class FileCompare
             Dim reader = File.OpenText(fd.FileName)
             While (reader.Peek <> -1)
                 line = reader.ReadLine()
-                If (line IsNot Nothing) Then
+                If Not String.IsNullOrEmpty(line) Then
                     file1ContentList.Add(line.Trim)
                 End If
             End While
@@ -51,7 +51,7 @@ Public Class FileCompare
             Dim reader = File.OpenText(fd.FileName)
             While (reader.Peek <> -1)
                 line = reader.ReadLine
-                If (line IsNot Nothing) Then
+                If Not String.IsNullOrEmpty(line) Then
                     file2ContentList.Add(line.Trim)
                 End If
             End While
