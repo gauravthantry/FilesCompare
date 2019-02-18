@@ -105,17 +105,19 @@ Public Class FileCompare
                 file1ListWithAppendedSpaces = ""
             End If
         Next
-        If (file1ContentList.Count = largestList) Then
-            differenceFound = True
-            For i As Integer = smallestList To largestList - 1
-                RichTextBox3.AppendText(file1ContentList.Item(i) + " |---|  |------------- No File2 Content for/from this line----------|" & Environment.NewLine)
+        If (file1ContentList.Count <> file2ContentList.Count) Then
+            If (file1ContentList.Count = largestList) Then
+                differenceFound = True
+                For i As Integer = smallestList To largestList - 1
+                    RichTextBox3.AppendText(file1ContentList.Item(i) + " |---|  |------------- No File2 Content for/from this line----------|" & Environment.NewLine)
 
-            Next
-        ElseIf (file2ContentList.Count = largestList) Then
-            differenceFound = True
-            For i As Integer = smallestList To largestList - 1
-                RichTextBox3.AppendText(" |------No File1 Content for/from this line-------|  |---|" + file2ContentList.Item(i) & Environment.NewLine)
-            Next
+                Next
+            ElseIf (file2ContentList.Count = largestList) Then
+                differenceFound = True
+                For i As Integer = smallestList To largestList - 1
+                    RichTextBox3.AppendText(" |------No File1 Content for/from this line-------|  |---|" + file2ContentList.Item(i) & Environment.NewLine)
+                Next
+            End If
         End If
         If (differenceFound = False) Then
             RichTextBox3.Text = "No Difference Found"
