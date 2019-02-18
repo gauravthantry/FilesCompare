@@ -67,6 +67,16 @@ Public Class FileCompare
     End Sub
 
     Public Sub Button3_Click(sender As Object, e As EventArgs) Handles Compare.Click
+        RichTextBox3.Clear()
+        If EnableTrimming.Checked = True Then
+            For i As Integer = 0 To file1ContentList.Count - 1
+                file1ContentList.Item(i) = file1ContentList.Item(i).Trim
+            Next
+            For i As Integer = 0 To file2ContentList.Count - 1
+                file2ContentList.Item(i) = file2ContentList.Item(i).Trim
+            Next
+
+        End If
         If (button1Clicked = True And button2Clicked = True) Then
             startComparison()
         End If
