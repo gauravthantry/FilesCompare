@@ -27,7 +27,11 @@ Public Class FileCompare
             While (reader.Peek <> -1)
                 line = reader.ReadLine()
                 If Not String.IsNullOrEmpty(line) Then
-                    file1ContentList.Add(line.Trim)
+                    If EnableTrimming.Checked = True Then
+                        file1ContentList.Add(line)
+                    Else
+                        file1ContentList.Add(line.Trim)
+                    End If
                 End If
             End While
         End If
@@ -52,7 +56,11 @@ Public Class FileCompare
             While (reader.Peek <> -1)
                 line = reader.ReadLine
                 If Not String.IsNullOrEmpty(line) Then
-                    file2ContentList.Add(line.Trim)
+                    If EnableTrimming.Checked = True Then
+                        file1ContentList.Add(line)
+                    Else
+                        file1ContentList.Add(line.Trim)
+                    End If
                 End If
             End While
         End If
