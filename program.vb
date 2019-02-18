@@ -28,9 +28,9 @@ Public Class FileCompare
                 line = reader.ReadLine()
                 If Not String.IsNullOrEmpty(line) Then
                     If EnableTrimming.Checked = True Then
-                        file1ContentList.Add(line)
+                        file1ContentList.Add(line.trim)
                     Else
-                        file1ContentList.Add(line.Trim)
+                        file1ContentList.Add(line)
                     End If
                 End If
             End While
@@ -57,9 +57,9 @@ Public Class FileCompare
                 line = reader.ReadLine
                 If Not String.IsNullOrEmpty(line) Then
                     If EnableTrimming.Checked = True Then
-                        file2ContentList.Add(line)
+                        file2ContentList.Add(line.trim)
                     Else
-                        file2ContentList.Add(line.Trim)
+                        file2ContentList.Add(line)
                     End If
                 End If
             End While
