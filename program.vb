@@ -8,7 +8,7 @@ Public Class FileCompare
     Dim button2Clicked As Boolean = False
     Dim differenceFound As Boolean = False
 
-    Public Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Public Sub Button1_Click(sender As Object, e As EventArgs) Handles File1.Click
         RichTextBox1.Clear()
         button1Clicked = True
         Dim fileContent = String.Empty
@@ -33,7 +33,7 @@ Public Class FileCompare
         End If
     End Sub
 
-    Public Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Public Sub Button2_Click(sender As Object, e As EventArgs) Handles File2.Click
         RichTextBox2.Clear()
         button2Clicked = True
         Dim fileContent = String.Empty
@@ -58,7 +58,7 @@ Public Class FileCompare
         End If
     End Sub
 
-    Public Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+    Public Sub Button3_Click(sender As Object, e As EventArgs) Handles Compare.Click
         If (button1Clicked = True And button2Clicked = True) Then
             startComparison()
         End If
@@ -104,7 +104,7 @@ Public Class FileCompare
         Return maxLength
     End Function
 
-    Public Sub Button4_Click(sender As Object, e As EventArgs) Handles Button4.Click
+Public Sub Button4_Click(sender As Object, e As EventArgs) Handles Reset.Click
         button1Clicked = False
         button2Clicked = False
         RichTextBox1.Clear()
