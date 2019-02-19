@@ -1,6 +1,8 @@
 Imports System.IO
 
 Public Class FileCompare
+            Dim fileContent = String.Empty
+        Dim fileName = String.Empty
     Dim file1ContentList As New List(Of String)
     Dim file2ContentList As New List(Of String)
     Dim line As String = Nothing
@@ -11,8 +13,6 @@ Public Class FileCompare
     Public Sub Button1_Click(sender As Object, e As EventArgs) Handles File1.Click
         RichTextBox1.Clear()
         button1Clicked = True
-        Dim fileContent = String.Empty
-        Dim fileName = String.Empty
         Dim fd As OpenFileDialog = New OpenFileDialog()
         fd.Title = "Open File Browser"
         fd.InitialDirectory = "C:\"
@@ -40,8 +40,6 @@ Public Class FileCompare
     Public Sub Button2_Click(sender As Object, e As EventArgs) Handles File2.Click
         RichTextBox2.Clear()
         button2Clicked = True
-        Dim fileContent = String.Empty
-        Dim fileName = String.Empty
         Dim fd As OpenFileDialog = New OpenFileDialog()
         fd.Title = "Open File Browser"
         ' fd.InitialDirectory = "C:\"
