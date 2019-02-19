@@ -1,6 +1,7 @@
 Imports System.IO
 
 Public Class FileCompare
+
     Dim fileContent = String.Empty
     Dim fileName = String.Empty
     Dim file1ContentList As New List(Of String)
@@ -9,9 +10,7 @@ Public Class FileCompare
     Dim button1Clicked As Boolean = False
     Dim button2Clicked As Boolean = False
     Dim differenceFound As Boolean = False
-    Dim fd As OpenFileDialog = New OpenFileDialog()                             'Opens the Brose files window
-
-
+    Dim fd As OpenFileDialog = New OpenFileDialog()                               'Opens the Brose files window
     Public Sub File1_Click(sender As Object, e As EventArgs) Handles File1.Click  'Handles the click of the file1 button
         RichTextBox1.Clear()
         button1Clicked = True
@@ -100,8 +99,10 @@ Public Class FileCompare
             largestList = file2ContentList.Count
         End If
         For i As Integer = 0 To smallestList - 1
-          
-
+            Dim string1 As String = file1ContentList.Item(i)
+            Dim string2 As String = file2ContentList.Item(i)
+            Dim indexes1 As New List(Of Integer)
+            Dim indexes2 As New List(Of Integer)
             If (file1ContentList.Item(i) <> file2ContentList.Item(i)) Then
                 If (n Mod 2 = 0) Then
                     RichTextBox3.SelectionColor = Color.Blue
@@ -110,12 +111,55 @@ Public Class FileCompare
                     RichTextBox3.SelectionColor = Color.Brown
                     RichTextBox4.SelectionColor = Color.Brown
                 End If
-                RichTextBox3.AppendText((i + 1).ToString + ":" + file1ContentList.Item(i) & Environment.NewLine)
-                RichTextBox4.AppendText((i + 1).ToString + ":" + file2ContentList.Item(i) & Environment.NewLine)
+
+                If (string1.Length < String2.Length) Then
+
+                    For j As Integer = 0 To string1.Length - 1
+                        If (string1(j) <> String2(j)) Then
+                            indexes1.Add(j)
+                            indexes2.Add(j)
+                        End If
+                    Next
+                    For j As Integer = string1.Length To String2.Length - 1
+                        indexes2.Add(j)
+                    Next
+                ElseIf (String2.Length < string1.Length) Then
+                    For j As Integer = 0 To String2.Length - 1
+                        If (string1(j) <> String2(j)) Then
+                            indexes1.Add(j)
+                            indexes2.Add(j)
+                        End If
+                    Next
+                    For j As Integer = String2.Length To string1.Length - 1
+                        indexes1.Add(j)
+                    Next
+                End If
+
+                RichTextBox3.AppendText((i + 1).ToString + ":")
+                For j As Integer = 0 To string1.Length - 1
+                    If (indexes1.Contains(j)) Then
+                        RichTextBox3.SelectionBackColor = Color.LightCoral
+                        RichTextBox3.AppendText(string1(j))
+                    Else
+                        RichTextBox3.AppendText(string1(j))
+                    End If
+                Next
+                RichTextBox3.AppendText(Environment.NewLine)
+                RichTextBox3.AppendText(Environment.NewLine)
+                RichTextBox4.AppendText((i + 1).ToString + ":")
+                For j As Integer = 0 To string2.Length - 1
+                    If (indexes2.Contains(j)) Then
+                        RichTextBox4.SelectionBackColor = Color.LightCoral
+                        RichTextBox4.AppendText(string2(j))
+                    Else
+                        RichTextBox4.AppendText(string2(j))
+                    End If
+                Next
+                RichTextBox4.AppendText(Environment.NewLine)
+                RichTextBox4.AppendText(Environment.NewLine)
                 differenceFound = True
                 n = n + 1
             End If
-
         Next
         If (file1ContentList.Count <> file2ContentList.Count) Then
 
@@ -175,10 +219,10 @@ Public Class FileCompare
         sfd.FilterIndex = 1
         sfd.RestoreDirectory = True
         If (sfd.ShowDialog() = DialogResult.OK) Then
-                Dim objWriter As StreamWriter = New StreamWriter(sfd.FileName)
-                objWriter.Write(RichTextBox3.Text)
-                objWriter.Close()
-            End If
+            Dim objWriter As StreamWriter = New StreamWriter(sfd.FileName)
+            objWriter.Write(RichTextBox3.Text)
+            objWriter.Close()
+        End If
     End Sub
 
 End Class
