@@ -1,8 +1,8 @@
 Imports System.IO
 
 Public Class FileCompare
-            Dim fileContent = String.Empty
-        Dim fileName = String.Empty
+    Dim fileContent = String.Empty
+    Dim fileName = String.Empty
     Dim file1ContentList As New List(Of String)
     Dim file2ContentList As New List(Of String)
     Dim line As String = Nothing
@@ -10,14 +10,15 @@ Public Class FileCompare
     Dim button2Clicked As Boolean = False
     Dim differenceFound As Boolean = False
 
-    Public Sub Button1_Click(sender As Object, e As EventArgs) Handles File1.Click
+    Public Sub File1_Click(sender As Object, e As EventArgs) Handles File1.Click  'Handles the click of the file1 button
         RichTextBox1.Clear()
         button1Clicked = True
-        Dim fd As OpenFileDialog = New OpenFileDialog()
+
+        Dim fd As OpenFileDialog = New OpenFileDialog()                             'Opens the Brose files window
         fd.Title = "Open File Browser"
         fd.InitialDirectory = "C:\"
-        fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml"
-        fd.FilterIndex = 1
+        fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml|SQL Files (*.sql)|*.sql"
+        fd.FilterIndex = 3
         fd.RestoreDirectory = True
         If fd.ShowDialog() = DialogResult.OK Then
             fileName = fd.FileName
@@ -28,7 +29,7 @@ Public Class FileCompare
                 line = reader.ReadLine()
                 If Not String.IsNullOrEmpty(line) Then
                     If EnableTrimming.Checked = True Then
-                        file1ContentList.Add(line.trim)
+                        file1ContentList.Add(line.Trim)
                     Else
                         file1ContentList.Add(line)
                     End If
@@ -37,14 +38,16 @@ Public Class FileCompare
         End If
     End Sub
 
-    Public Sub Button2_Click(sender As Object, e As EventArgs) Handles File2.Click
+    Public Sub File2_Click(sender As Object, e As EventArgs) Handles File2.Click
         RichTextBox2.Clear()
         button2Clicked = True
+        Dim fileContent = String.Empty
+        Dim fileName = String.Empty
         Dim fd As OpenFileDialog = New OpenFileDialog()
         fd.Title = "Open File Browser"
         ' fd.InitialDirectory = "C:\"
-        fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml"
-        fd.FilterIndex = 1
+        fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml|SQL Files (*.sql)|*.sql"
+        fd.FilterIndex = 3
         fd.RestoreDirectory = True
         If fd.ShowDialog() = DialogResult.OK Then
             fileName = fd.FileName
@@ -55,7 +58,7 @@ Public Class FileCompare
                 line = reader.ReadLine
                 If Not String.IsNullOrEmpty(line) Then
                     If EnableTrimming.Checked = True Then
-                        file2ContentList.Add(line.trim)
+                        file2ContentList.Add(line.Trim)
                     Else
                         file2ContentList.Add(line)
                     End If
@@ -64,7 +67,7 @@ Public Class FileCompare
         End If
     End Sub
 
-    Public Sub Button3_Click(sender As Object, e As EventArgs) Handles Compare.Click
+    Public Sub Compare_Click(sender As Object, e As EventArgs) Handles Compare.Click
         RichTextBox3.Clear()
         If EnableTrimming.Checked = True Then
             For i As Integer = 0 To file1ContentList.Count - 1
@@ -76,13 +79,13 @@ Public Class FileCompare
 
         End If
         If (button1Clicked = True And button2Clicked = True) Then
-            startComparison()
+            StartComparison()
         End If
         button1Clicked = False
         button2Clicked = False
     End Sub
 
-    Public Sub startComparison()
+    Public Sub StartComparison()
         Dim smallestList As Integer
         Dim largestList As Integer
         If (file1ContentList.Count < file2ContentList.Count) Then
@@ -96,12 +99,10 @@ Public Class FileCompare
         Else
             largestList = file2ContentList.Count
         End If
-
         For i As Integer = 0 To smallestList - 1
             If (file1ContentList.Item(i) <> file2ContentList.Item(i)) Then
                 RichTextBox3.AppendText(file1ContentList.Item(i) + " |---| " + file2ContentList.Item(i) & Environment.NewLine)
                 differenceFound = True
-                file1ListWithAppendedSpaces = ""
             End If
         Next
         If (file1ContentList.Count <> file2ContentList.Count) Then
@@ -121,19 +122,11 @@ Public Class FileCompare
         If (differenceFound = False) Then
             RichTextBox3.Text = "No Difference Found"
         End If
+
     End Sub
 
-    Function findMaximumLength() As Integer
-        Dim maxLength As Integer = 0
-        For i As Integer = 0 To file1ContentList.Count - 1
-            If (file1ContentList.Item(i).Length > maxLength) Then
-                maxLength = file1ContentList.Item(i).Length
-            End If
-        Next
-        Return maxLength
-    End Function
 
-    Public Sub Button4_Click(sender As Object, e As EventArgs) Handles Reset.Click
+    Public Sub Reset_Click(sender As Object, e As EventArgs) Handles Reset.Click
         button1Clicked = False
         button2Clicked = False
         RichTextBox1.Clear()
@@ -141,13 +134,13 @@ Public Class FileCompare
         RichTextBox3.Clear()
     End Sub
 
-   Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
+    Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
 
         Dim sfd As SaveFileDialog = New SaveFileDialog()
         sfd.InitialDirectory = "C:\"
         sfd.Title = "Save file"
         sfd.DefaultExt = "txt"
-        sfd.Filter = "TXT Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
+sfd.Filter = "Text Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
         sfd.FilterIndex = 1
         sfd.RestoreDirectory = True
         If (sfd.ShowDialog() = DialogResult.OK) Then
@@ -156,6 +149,5 @@ Public Class FileCompare
                 objWriter.Close()
             End If
     End Sub
-
 
 End Class
