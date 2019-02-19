@@ -87,9 +87,6 @@ Public Class FileCompare
     Public Sub startComparison()
         Dim smallestList As Integer
         Dim largestList As Integer
-        Dim maxLength As Integer
-        Dim noOfSpaces As Integer
-        Dim file1ListWithAppendedSpaces As String
         If (file1ContentList.Count < file2ContentList.Count) Then
             smallestList = file1ContentList.Count
         Else
@@ -102,14 +99,8 @@ Public Class FileCompare
             largestList = file2ContentList.Count
         End If
 
-        maxLength = findMaximumLength()
         For i As Integer = 0 To smallestList - 1
             If (file1ContentList.Item(i) <> file2ContentList.Item(i)) Then
-                noOfSpaces = maxLength - file1ContentList.Item(i).Length
-                file1ListWithAppendedSpaces = file1ContentList.Item(i)
-                For j As Integer = 1 To noOfSpaces
-                    file1ListWithAppendedSpaces = file1ListWithAppendedSpaces + " "
-                Next
                 RichTextBox3.AppendText(file1ContentList.Item(i) + " |---| " + file2ContentList.Item(i) & Environment.NewLine)
                 differenceFound = True
                 file1ListWithAppendedSpaces = ""
