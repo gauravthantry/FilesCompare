@@ -158,6 +158,9 @@ Public Class FileCompare
         RichTextBox2.Clear()
         RichTextBox3.Clear()
         RichTextBox4.Clear()
+        file1ContentList.Clear()
+        file2ContentList.Clear()
+        EnableTrimming.Checked = False
         fd.Reset()
 
     End Sub
