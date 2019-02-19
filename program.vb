@@ -9,12 +9,12 @@ Public Class FileCompare
     Dim button1Clicked As Boolean = False
     Dim button2Clicked As Boolean = False
     Dim differenceFound As Boolean = False
+    Dim fd As OpenFileDialog = New OpenFileDialog()                             'Opens the Brose files window
+
 
     Public Sub File1_Click(sender As Object, e As EventArgs) Handles File1.Click  'Handles the click of the file1 button
         RichTextBox1.Clear()
         button1Clicked = True
-
-        Dim fd As OpenFileDialog = New OpenFileDialog()                             'Opens the Brose files window
         fd.Title = "Open File Browser"
         fd.InitialDirectory = "C:\"
         fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml|SQL Files (*.sql)|*.sql"
@@ -45,7 +45,6 @@ Public Class FileCompare
         Dim fileName = String.Empty
         Dim fd As OpenFileDialog = New OpenFileDialog()
         fd.Title = "Open File Browser"
-        ' fd.InitialDirectory = "C:\"
         fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml|SQL Files (*.sql)|*.sql"
         fd.FilterIndex = 3
         fd.RestoreDirectory = True
@@ -88,6 +87,7 @@ Public Class FileCompare
     Public Sub StartComparison()
         Dim smallestList As Integer
         Dim largestList As Integer
+        Dim n As Integer = 0
         If (file1ContentList.Count < file2ContentList.Count) Then
             smallestList = file1ContentList.Count
         Else
@@ -100,27 +100,52 @@ Public Class FileCompare
             largestList = file2ContentList.Count
         End If
         For i As Integer = 0 To smallestList - 1
+          
+
             If (file1ContentList.Item(i) <> file2ContentList.Item(i)) Then
-                RichTextBox3.AppendText(file1ContentList.Item(i) + " |---| " + file2ContentList.Item(i) & Environment.NewLine)
+                If (n Mod 2 = 0) Then
+                    RichTextBox3.SelectionColor = Color.Blue
+                    RichTextBox4.SelectionColor = Color.Blue
+                Else
+                    RichTextBox3.SelectionColor = Color.Brown
+                    RichTextBox4.SelectionColor = Color.Brown
+                End If
+                RichTextBox3.AppendText((i + 1).ToString + ":" + file1ContentList.Item(i) & Environment.NewLine)
+                RichTextBox4.AppendText((i + 1).ToString + ":" + file2ContentList.Item(i) & Environment.NewLine)
                 differenceFound = True
+                n = n + 1
             End If
+
         Next
         If (file1ContentList.Count <> file2ContentList.Count) Then
+
             If (file1ContentList.Count = largestList) Then
                 differenceFound = True
                 For i As Integer = smallestList To largestList - 1
-                    RichTextBox3.AppendText(file1ContentList.Item(i) + " |---|  |------------- No File2 Content for/from this line----------|" & Environment.NewLine)
-
+                    If (n Mod 2 = 0) Then
+                        RichTextBox3.SelectionColor = Color.Blue
+                    Else
+                        RichTextBox3.SelectionColor = Color.Brown
+                    End If
+                    RichTextBox3.AppendText((i + 1).ToString + ":" + file1ContentList.Item(i) & Environment.NewLine)
+                    n = n + 1
                 Next
             ElseIf (file2ContentList.Count = largestList) Then
                 differenceFound = True
                 For i As Integer = smallestList To largestList - 1
-                    RichTextBox3.AppendText(" |------No File1 Content for/from this line-------|  |---|" + file2ContentList.Item(i) & Environment.NewLine)
+                    If (n Mod 2 = 0) Then
+                        RichTextBox4.SelectionColor = Color.Blue
+                    Else
+                        RichTextBox4.SelectionColor = Color.Brown
+                    End If
+                    RichTextBox4.AppendText((i + 1).ToString + ":" + file2ContentList.Item(i) & Environment.NewLine)
+                    n = n + 1
                 Next
             End If
         End If
         If (differenceFound = False) Then
             RichTextBox3.Text = "No Difference Found"
+            RichTextBox4.Text = "No Difference Found"
         End If
 
     End Sub
@@ -132,6 +157,9 @@ Public Class FileCompare
         RichTextBox1.Clear()
         RichTextBox2.Clear()
         RichTextBox3.Clear()
+        RichTextBox4.Clear()
+        fd.Reset()
+
     End Sub
 
     Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
@@ -140,7 +168,7 @@ Public Class FileCompare
         sfd.InitialDirectory = "C:\"
         sfd.Title = "Save file"
         sfd.DefaultExt = "txt"
-sfd.Filter = "Text Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
+        sfd.Filter = "TXT Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
         sfd.FilterIndex = 1
         sfd.RestoreDirectory = True
         If (sfd.ShowDialog() = DialogResult.OK) Then
