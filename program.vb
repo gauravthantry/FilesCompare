@@ -143,11 +143,20 @@ Public Class FileCompare
         RichTextBox3.Clear()
     End Sub
 
-Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
+   Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
 
         Dim sfd As SaveFileDialog = New SaveFileDialog()
-        sfd.ShowDialog()
-
+        sfd.InitialDirectory = "C:\"
+        sfd.Title = "Save file"
+        sfd.DefaultExt = "txt"
+        sfd.Filter = "TXT Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
+        sfd.FilterIndex = 1
+        sfd.RestoreDirectory = True
+        If (sfd.ShowDialog() = DialogResult.OK) Then
+                Dim objWriter As StreamWriter = New StreamWriter(sfd.FileName)
+                objWriter.Write(RichTextBox3.Text)
+                objWriter.Close()
+            End If
     End Sub
 
 
