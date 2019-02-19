@@ -143,5 +143,12 @@ Public Class FileCompare
         RichTextBox3.Clear()
     End Sub
 
+Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
+
+        Dim sfd As SaveFileDialog = New SaveFileDialog()
+        sfd.ShowDialog()
+
+    End Sub
+
 
 End Class
