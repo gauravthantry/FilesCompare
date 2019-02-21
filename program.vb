@@ -20,15 +20,15 @@ Public Class FileCompare
         fd.Filter = "Text Files (*.txt)|*.txt|XML files (*.xml)|*.xml|SQL Files (*.sql)|*.sql"
         fd.FilterIndex = 3
         fd.RestoreDirectory = True
-        If fd.ShowDialog() = DialogResult.OK Then
-            fileName = fd.FileName
-            fileName = fileName.Substring(fileName.LastIndexOf("\") + 1)
+        If fd.ShowDialog() = DialogResult.OK Then                                 'This condition executes when the file is selected
+            fileName = fd.FileName                                                'fd.FileName holds the entire path of the file
+            fileName = fileName.Substring(fileName.LastIndexOf("\") + 1)          'This would filter out only the fileName
             RichTextBox1.Text = fileName
             Dim reader = File.OpenText(fd.FileName)
-            While (reader.Peek <> -1)
+            While (reader.Peek <> -1)                                             'WHen not a blank line
                 line = reader.ReadLine()
                 If Not String.IsNullOrEmpty(line) Then
-                    If EnableTrimming.Checked = True Then
+                    If EnableTrimming.Checked = True Then                         'This condition executes When the trimming option is selected
                         file1ContentList.Add(line.Trim)
                     Else
                         file1ContentList.Add(line)
@@ -38,7 +38,7 @@ Public Class FileCompare
         End If
     End Sub
 
-    Public Sub File2_Click(sender As Object, e As EventArgs) Handles File2.Click
+    Public Sub File2_Click(sender As Object, e As EventArgs) Handles File2.Click  'This function performs the sames tasks as of the file1 button
         RichTextBox2.Clear()
         button2Clicked = True
         Dim fileContent = String.Empty
@@ -66,7 +66,7 @@ Public Class FileCompare
         End If
     End Sub
 
-    Public Sub Compare_Click(sender As Object, e As EventArgs) Handles Compare.Click
+    Public Sub Compare_Click(sender As Object, e As EventArgs) Handles Compare.Click                'This button is clicked once both the files have been uploaded
         RichTextBox3.Clear()
         If EnableTrimming.Checked = True Then
             For i As Integer = 0 To file1ContentList.Count - 1
@@ -78,7 +78,7 @@ Public Class FileCompare
 
         End If
         If (button1Clicked = True And button2Clicked = True) Then
-            StartComparison()
+            StartComparison()                                                                       'This function has performs the comparison task
         End If
         button1Clicked = False
         button2Clicked = False
@@ -129,7 +129,6 @@ Public Class FileCompare
                                 If (mismatch = True) Then
                                     If (string1(j) = string2(k)) Then
                                         If (indexes2.Contains(k)) Then
-                                            RichTextBox5.AppendText("Match present" & Environment.NewLine)
                                             indexes2.Remove(indexes2.IndexOf(k))
                                         End If
                                         mismatch = False
