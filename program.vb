@@ -11,6 +11,7 @@ Public Class FileCompare
     Dim button2Clicked As Boolean = False
     Dim differenceFound As Boolean = False
     Dim fd As OpenFileDialog = New OpenFileDialog()                               'Opens the Brose files window
+
     Public Sub File1_Click(sender As Object, e As EventArgs) Handles File1.Click  'Handles the click of the file1 button
         RichTextBox1.Clear()
         button1Clicked = True
@@ -99,10 +100,12 @@ Public Class FileCompare
             largestList = file2ContentList.Count
         End If
         For i As Integer = 0 To smallestList - 1
-            Dim string1 As String = file1ContentList.Item(i)
-            Dim string2 As String = file2ContentList.Item(i)
             Dim indexes1 As New List(Of Integer)
             Dim indexes2 As New List(Of Integer)
+            Dim string1 As String = file1ContentList.Item(i)
+            Dim string2 As String = file2ContentList.Item(i)
+
+            Dim mismatch As Boolean = False
             If (file1ContentList.Item(i) <> file2ContentList.Item(i)) Then
                 If (n Mod 2 = 0) Then
                     RichTextBox3.SelectionColor = Color.Blue
@@ -112,35 +115,68 @@ Public Class FileCompare
                     RichTextBox4.SelectionColor = Color.Brown
                 End If
 
-                If (string1.Length < String2.Length) Then
+                If (string1.Length < string2.Length) Then
 
                     For j As Integer = 0 To string1.Length - 1
-                        If (string1(j) <> String2(j)) Then
-                            indexes1.Add(j)
-                            indexes2.Add(j)
+                        If (mismatch = False) Then
+                            If (string1(j) <> string2(j)) Then
+                                indexes2.Add(j)
+                                mismatch = True
+                            End If
+                        End If
+                        If (mismatch = True) Then
+                            For k As Integer = j + 1 To string2.Length - 1
+                                If (mismatch = True) Then
+                                    If (string1(j) = string2(k)) Then
+                                        If (indexes2.Contains(k)) Then
+                                            RichTextBox5.AppendText("Match present" & Environment.NewLine)
+                                            indexes2.Remove(indexes2.IndexOf(k))
+                                        End If
+                                        mismatch = False
+                                    ElseIf (string1(j) <> string2(k)) Then
+                                        indexes2.Add(k)
+                                    End If
+                                End If
+                            Next
                         End If
                     Next
-                    For j As Integer = string1.Length To String2.Length - 1
-                        indexes2.Add(j)
-                    Next
-                ElseIf (String2.Length < string1.Length) Then
-                    For j As Integer = 0 To String2.Length - 1
-                        If (string1(j) <> String2(j)) Then
-                            indexes1.Add(j)
-                            indexes2.Add(j)
+                ElseIf (string2.Length < string1.Length) Then
+                    For j As Integer = 0 To string2.Length - 1
+                        If (mismatch = False) Then
+
+                            If (string1(j) <> string2(j)) Then
+                                RichTextBox6.AppendText("Entered box 6")
+                                indexes1.Add(j)
+                                RichTextBox6.AppendText("Added" & Environment.NewLine)
+                                mismatch = True
+                            End If
                         End If
-                    Next
-                    For j As Integer = String2.Length To string1.Length - 1
-                        indexes1.Add(j)
+                        If (mismatch = True) Then
+                            For k As Integer = j + 1 To string1.Length - 1
+                                If (mismatch = True) Then
+                                    If (string1(k) = string2(j)) Then
+                                        If (indexes1.Contains(k)) Then
+                                            RichTextBox6.AppendText("Match present" & Environment.NewLine)
+                                            indexes1.Remove(indexes1.IndexOf(k))
+                                        End If
+                                        mismatch = False
+                                    ElseIf (string1(k) <> string2(j)) Then
+                                        indexes1.Add(k)
+                                        RichTextBox6.AppendText("Added after no match found" & Environment.NewLine)
+                                    End If
+                                End If
+                            Next
+                        End If
                     Next
                 End If
-
+                mismatch = False
                 RichTextBox3.AppendText((i + 1).ToString + ":")
                 For j As Integer = 0 To string1.Length - 1
                     If (indexes1.Contains(j)) Then
                         RichTextBox3.SelectionBackColor = Color.LightCoral
                         RichTextBox3.AppendText(string1(j))
                     Else
+                        RichTextBox3.SelectionBackColor = Color.Transparent
                         RichTextBox3.AppendText(string1(j))
                     End If
                 Next
@@ -152,6 +188,7 @@ Public Class FileCompare
                         RichTextBox4.SelectionBackColor = Color.LightCoral
                         RichTextBox4.AppendText(string2(j))
                     Else
+                        RichTextBox3.SelectionBackColor = Color.Transparent
                         RichTextBox4.AppendText(string2(j))
                     End If
                 Next
@@ -159,54 +196,30 @@ Public Class FileCompare
                 RichTextBox4.AppendText(Environment.NewLine)
                 differenceFound = True
                 n = n + 1
-            End If
+                indexes1.Clear()
+                indexes2.Clear()
+            End If 
         Next
-        If (file1ContentList.Count <> file2ContentList.Count) Then
 
-            If (file1ContentList.Count = largestList) Then
-                differenceFound = True
-                For i As Integer = smallestList To largestList - 1
-                    If (n Mod 2 = 0) Then
-                        RichTextBox3.SelectionColor = Color.Blue
-                    Else
-                        RichTextBox3.SelectionColor = Color.Brown
-                    End If
-                    RichTextBox3.AppendText((i + 1).ToString + ":" + file1ContentList.Item(i) & Environment.NewLine)
-                    n = n + 1
-                Next
-            ElseIf (file2ContentList.Count = largestList) Then
-                differenceFound = True
-                For i As Integer = smallestList To largestList - 1
-                    If (n Mod 2 = 0) Then
-                        RichTextBox4.SelectionColor = Color.Blue
-                    Else
-                        RichTextBox4.SelectionColor = Color.Brown
-                    End If
-                    RichTextBox4.AppendText((i + 1).ToString + ":" + file2ContentList.Item(i) & Environment.NewLine)
-                    n = n + 1
-                Next
-            End If
-        End If
         If (differenceFound = False) Then
             RichTextBox3.Text = "No Difference Found"
             RichTextBox4.Text = "No Difference Found"
         End If
-
     End Sub
-
 
     Public Sub Reset_Click(sender As Object, e As EventArgs) Handles Reset.Click
         button1Clicked = False
         button2Clicked = False
+
         RichTextBox1.Clear()
         RichTextBox2.Clear()
         RichTextBox3.Clear()
         RichTextBox4.Clear()
+
         file1ContentList.Clear()
         file2ContentList.Clear()
         EnableTrimming.Checked = False
         fd.Reset()
-
     End Sub
 
     Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
