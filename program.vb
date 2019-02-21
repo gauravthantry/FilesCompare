@@ -89,11 +89,11 @@ Public Class FileCompare
         Dim largestList As Integer
         Dim n As Integer = 0
         If (file1ContentList.Count < file2ContentList.Count) Then
-            smallestList = file1ContentList.Counts
-    largestList = file2ContentList.Count
+            smallestList = file1ContentList.Count
+            largestList = file2ContentList.Count
         Else
             smallestList = file2ContentList.Count
-    largestList = file1ContentList.Count
+            largestList = file1ContentList.Count
         End If
         For i As Integer = 0 To smallestList - 1
             Dim indexes1 As New List(Of Integer)
