@@ -140,9 +140,7 @@ Public Class FileCompare
                         If (mismatch = False) Then
 
                             If (string1(j) <> string2(j)) Then
-                                RichTextBox6.AppendText("Entered box 6")
                                 indexes1.Add(j)
-                                RichTextBox6.AppendText("Added" & Environment.NewLine)
                                 mismatch = True
                             End If
                         End If
@@ -151,13 +149,11 @@ Public Class FileCompare
                                 If (mismatch = True) Then
                                     If (string1(k) = string2(j)) Then
                                         If (indexes1.Contains(k)) Then
-                                            RichTextBox6.AppendText("Match present" & Environment.NewLine)
                                             indexes1.Remove(indexes1.IndexOf(k))
                                         End If
                                         mismatch = False
                                     ElseIf (string1(k) <> string2(j)) Then
                                         indexes1.Add(k)
-                                        RichTextBox6.AppendText("Added after no match found" & Environment.NewLine)
                                     End If
                                 End If
                             Next
