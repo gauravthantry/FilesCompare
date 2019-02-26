@@ -115,10 +115,14 @@ Public Class FileCompare
                 If (string1.Length < string2.Length) Then
                     For j As Integer = 0 To string1.Length - 1
                         If (charMismatch = False) Then
-                            If (string1(j) <> string2(j)) Then
-                                If Not indexes2.Contains(j) Then
-                                    indexes2.Add(j)
+                            If Not matchedIndexes.Contains(j) Then
+                                If (string1(j) <> string2(j)) Then
+                                    If Not indexes2.Contains(j) Then
+                                        indexes2.Add(j)
+                                    End If
+                                    charMismatch = True
                                 End If
+                            ElseIf (matchedIndexes.Contains(j)) Then
                                 charMismatch = True
                             End If
                         End If
@@ -146,23 +150,24 @@ Public Class FileCompare
                         charMismatch = False
                     Next
                     If matchedIndexes.Count > 0 Then
-
                         For m As Integer = 0 To matchedIndexes.Count - 1
                             If indexes2.Contains(matchedIndexes(m)) Then
                                 indexes2.RemoveAt(indexes2.IndexOf(matchedIndexes(m)))
                             End If
                         Next
-
                         matchedIndexes.Clear()
                     End If
-
                 ElseIf (string2.Length < string1.Length) Then
                     For j As Integer = 0 To string2.Length - 1
                         If (charMismatch = False) Then
-                            If (string1(j) <> string2(j)) Then
-                                If Not indexes1.Contains(j) Then
-                                    indexes1.Add(j)
+                            If Not matchedIndexes.Contains(j) Then
+                                If (string1(j) <> string2(j)) Then
+                                    If Not indexes1.Contains(j) Then
+                                        indexes1.Add(j)
+                                    End If
+                                    charMismatch = True
                                 End If
+                            ElseIf matchedIndexes.Contains(j) Then
                                 charMismatch = True
                             End If
                         End If
@@ -190,18 +195,15 @@ Public Class FileCompare
                         charMismatch = False
                     Next
                     If matchedIndexes.Count > 0 Then
-
                         For m As Integer = 0 To matchedIndexes.Count - 1
                             If indexes1.Contains(matchedIndexes(m)) Then
                                 indexes1.RemoveAt(indexes1.IndexOf(matchedIndexes(m)))
                             End If
                         Next
-
                         matchedIndexes.Clear()
                     End If
                 End If
                 charMismatch = False
-                RichTextBox3.AppendText((i + 1).ToString + ":")
                 For j As Integer = 0 To string1.Length - 1
                     If (indexes1.Contains(j)) Then
                         RichTextBox3.SelectionBackColor = Color.LightCoral
@@ -213,7 +215,6 @@ Public Class FileCompare
                 Next
                 RichTextBox3.AppendText(Environment.NewLine)
                 RichTextBox3.AppendText(Environment.NewLine)
-                RichTextBox4.AppendText((i + 1).ToString + ":")
                 For j As Integer = 0 To string2.Length - 1
                     If (indexes2.Contains(j)) Then
                         RichTextBox4.SelectionBackColor = Color.LightCoral
@@ -230,43 +231,40 @@ Public Class FileCompare
                 indexes1.Clear()
                 indexes2.Clear()
             End If
-
         Next
-            If (differenceFound = False) Then
-                RichTextBox3.Text = "No Difference Found"
-                RichTextBox4.Text = "No Difference Found"
-            End If
 
+        If (differenceFound = False) Then
+            RichTextBox3.Text = "No Difference Found"
+            RichTextBox4.Text = "No Difference Found"
+        End If
 
     End Sub
 
     Public Sub Reset_Click(sender As Object, e As EventArgs) Handles Reset.Click
         button1Clicked = False
         button2Clicked = False
-
         RichTextBox1.Clear()
         RichTextBox2.Clear()
         RichTextBox3.Clear()
         RichTextBox4.Clear()
-
         file1ContentList.Clear()
         file2ContentList.Clear()
         EnableTrimming.Checked = False
         fd.Reset()
     End Sub
 
-    Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
-        Dim sfd As SaveFileDialog = New SaveFileDialog()
-        sfd.InitialDirectory = "C:\"
-        sfd.Title = "Save file"
-        sfd.DefaultExt = "txt"
-        sfd.Filter = "TXT Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
-        sfd.FilterIndex = 1
-        sfd.RestoreDirectory = True
-        If (sfd.ShowDialog() = DialogResult.OK) Then
-            Dim objWriter As StreamWriter = New StreamWriter(sfd.FileName)
-            objWriter.Write(RichTextBox3.Text)
-            objWriter.Close()
-        End If
-    End Sub
+    ' Public Sub SaveFile_Click(sender As Object, e As EventArgs)      'This function to be used to save the comparison output in a file (Changes to be done)
+    '     Dim sfd As SaveFileDialog = New SaveFileDialog()
+    '     sfd.InitialDirectory = "C:\"
+    '     sfd.Title = "Save file"
+    '     sfd.DefaultExt = "txt"
+    '     sfd.Filter = "TXT Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql|XML Files (*.xml)|*.xml|All Files (*.*)|*.*"
+    '     sfd.FilterIndex = 1
+    '     sfd.RestoreDirectory = True
+    '     If (sfd.ShowDialog() = DialogResult.OK) Then
+    '         Dim objWriter As StreamWriter = New StreamWriter(sfd.FileName)
+    '         objWriter.Write(RichTextBox3.Text)
+    '         objWriter.Close()
+    '     End If
+    ' End Sub
 End Class
