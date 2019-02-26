@@ -159,27 +159,46 @@ Public Class FileCompare
                 ElseIf (string2.Length < string1.Length) Then
                     For j As Integer = 0 To string2.Length - 1
                         If (charMismatch = False) Then
-
                             If (string1(j) <> string2(j)) Then
-                                indexes1.Add(j)
+                                If Not indexes1.Contains(j) Then
+                                    indexes1.Add(j)
+                                End If
                                 charMismatch = True
                             End If
                         End If
                         If (charMismatch = True) Then
                             For k As Integer = j + 1 To string1.Length - 1
                                 If (charMismatch = True) Then
-                                    If (string1(k) = string2(j)) Then
-                                        If (indexes1.Contains(k)) Then
-                                            indexes1.Remove(indexes1.IndexOf(k))
+                                    If Not matchedIndexes.Contains(k) Then
+                                        If (string1(k) = string2(j)) Then
+                                            If (indexes1.Contains(k)) Then
+                                                indexes1.RemoveAt(indexes1.IndexOf(k))
+                                            End If
+                                            If Not matchedIndexes.Contains(k) Then
+                                                matchedIndexes.Add(k)
+                                            End If
+                                            charMismatch = False
+                                        ElseIf (string1(k) <> string2(j)) Then
+                                            If Not indexes1.Contains(k) Then
+                                                indexes1.Add(k)
+                                            End If
                                         End If
-                                        charMismatch = False
-                                    ElseIf (string1(k) <> string2(j)) Then
-                                        indexes1.Add(k)
                                     End If
                                 End If
                             Next
                         End If
+                        charMismatch = False
                     Next
+                    If matchedIndexes.Count > 0 Then
+
+                        For m As Integer = 0 To matchedIndexes.Count - 1
+                            If indexes1.Contains(matchedIndexes(m)) Then
+                                indexes1.RemoveAt(indexes1.IndexOf(matchedIndexes(m)))
+                            End If
+                        Next
+
+                        matchedIndexes.Clear()
+                    End If
                 End If
                 charMismatch = False
                 RichTextBox3.AppendText((i + 1).ToString + ":")
