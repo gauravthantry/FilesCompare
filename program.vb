@@ -87,6 +87,7 @@ Public Class FileCompare
     Public Sub StartComparison()
         Dim smallestList As Integer
         Dim largestList As Integer
+        Dim matchedIndexes As New List(Of Integer)
         Dim n As Integer = 0
         If (file1ContentList.Count < file2ContentList.Count) Then
             smallestList = file1ContentList.Count
@@ -101,7 +102,7 @@ Public Class FileCompare
             Dim string1 As String = file1ContentList.Item(i)
             Dim string2 As String = file2ContentList.Item(i)
 
-            Dim mismatch As Boolean = False
+            Dim charMismatch As Boolean = False
             If (file1ContentList.Item(i) <> file2ContentList.Item(i)) Then
                 If (n Mod 2 = 0) Then
                     RichTextBox3.SelectionColor = Color.Blue
@@ -112,46 +113,66 @@ Public Class FileCompare
                 End If
 
                 If (string1.Length < string2.Length) Then
-
                     For j As Integer = 0 To string1.Length - 1
-                        If (mismatch = False) Then
+                        If (charMismatch = False) Then
                             If (string1(j) <> string2(j)) Then
-                                indexes2.Add(j)
-                                mismatch = True
+                                If Not indexes2.Contains(j) Then
+                                    indexes2.Add(j)
+                                End If
+                                charMismatch = True
                             End If
                         End If
-                        If (mismatch = True) Then
+                        If (charMismatch = True) Then
                             For k As Integer = j + 1 To string2.Length - 1
-                                If (mismatch = True) Then
-                                    If (string1(j) = string2(k)) Then
-                                        If (indexes2.Contains(k)) Then
-                                            indexes2.Remove(indexes2.IndexOf(k))
+                                If (charMismatch = True) Then
+                                    If Not matchedIndexes.Contains(k) Then
+                                        If (string1(j) = string2(k)) Then
+                                            If indexes2.Contains(k) Then
+                                                indexes2.Remove(indexes2.IndexOf(k))
+                                            End If
+                                            If Not matchedIndexes.Contains(k) Then
+                                                matchedIndexes.Add(k)
+                                            End If
+                                            charMismatch = False
+                                        ElseIf string1(j) <> string2(k) Then
+                                            If Not indexes2.Contains(k) Then
+                                                indexes2.Add(k)
+                                            End If
                                         End If
-                                        mismatch = False
-                                    ElseIf (string1(j) <> string2(k)) Then
-                                        indexes2.Add(k)
                                     End If
                                 End If
                             Next
                         End If
+                        charMismatch = False
                     Next
+                    If matchedIndexes.Count > 0 Then
+
+                        For m As Integer = 0 To matchedIndexes.Count - 1
+                            If indexes2.Contains(matchedIndexes(m)) Then
+                                indexes2.RemoveAt(indexes2.IndexOf(matchedIndexes(m)))
+                            End If
+                        Next
+
+                        matchedIndexes.Clear()
+                    End If
+
                 ElseIf (string2.Length < string1.Length) Then
                     For j As Integer = 0 To string2.Length - 1
-                        If (mismatch = False) Then
+                        If (charMismatch = False) Then
 
                             If (string1(j) <> string2(j)) Then
                                 indexes1.Add(j)
-                                mismatch = True
+                                charMismatch = True
                             End If
                         End If
-                        If (mismatch = True) Then
+                        If (charMismatch = True) Then
                             For k As Integer = j + 1 To string1.Length - 1
-                                If (mismatch = True) Then
+                                If (charMismatch = True) Then
                                     If (string1(k) = string2(j)) Then
                                         If (indexes1.Contains(k)) Then
                                             indexes1.Remove(indexes1.IndexOf(k))
                                         End If
-                                        mismatch = False
+                                        charMismatch = False
                                     ElseIf (string1(k) <> string2(j)) Then
                                         indexes1.Add(k)
                                     End If
@@ -160,7 +181,7 @@ Public Class FileCompare
                         End If
                     Next
                 End If
-                mismatch = False
+                charMismatch = False
                 RichTextBox3.AppendText((i + 1).ToString + ":")
                 For j As Integer = 0 To string1.Length - 1
                     If (indexes1.Contains(j)) Then
@@ -179,7 +200,7 @@ Public Class FileCompare
                         RichTextBox4.SelectionBackColor = Color.LightCoral
                         RichTextBox4.AppendText(string2(j))
                     Else
-                        RichTextBox3.SelectionBackColor = Color.Transparent
+                        RichTextBox4.SelectionBackColor = Color.Transparent
                         RichTextBox4.AppendText(string2(j))
                     End If
                 Next
@@ -189,13 +210,15 @@ Public Class FileCompare
                 n = n + 1
                 indexes1.Clear()
                 indexes2.Clear()
-            End If 
-        Next
+            End If
 
-        If (differenceFound = False) Then
-            RichTextBox3.Text = "No Difference Found"
-            RichTextBox4.Text = "No Difference Found"
-        End If
+        Next
+            If (differenceFound = False) Then
+                RichTextBox3.Text = "No Difference Found"
+                RichTextBox4.Text = "No Difference Found"
+            End If
+
+
     End Sub
 
     Public Sub Reset_Click(sender As Object, e As EventArgs) Handles Reset.Click
@@ -214,7 +237,6 @@ Public Class FileCompare
     End Sub
 
     Public Sub SaveFile_Click(sender As Object, e As EventArgs) Handles SaveFile.Click
-
         Dim sfd As SaveFileDialog = New SaveFileDialog()
         sfd.InitialDirectory = "C:\"
         sfd.Title = "Save file"
@@ -228,5 +250,4 @@ Public Class FileCompare
             objWriter.Close()
         End If
     End Sub
-
 End Class
