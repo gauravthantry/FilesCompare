@@ -157,6 +157,11 @@ Public Class FileCompare
                         Next
                         matchedIndexes.Clear()
                     End If
+                    For j As Integer = string1.Length To string2.Length - 1
+                        If Not matchedIndexes.Contains(j) Then
+                            indexes2.Add(j)
+                        End If
+                    Next
                 ElseIf (string2.Length < string1.Length) Then
                     For j As Integer = 0 To string2.Length - 1
                         If (charMismatch = False) Then
@@ -202,6 +207,11 @@ Public Class FileCompare
                         Next
                         matchedIndexes.Clear()
                     End If
+                    For j As Integer = string2.Length To string1.Length - 1
+                        If Not matchedIndexes.Contains(j) Then
+                            indexes1.Add(j)
+                        End If
+                    Next
                 End If
                 charMismatch = False
                 For j As Integer = 0 To string1.Length - 1
