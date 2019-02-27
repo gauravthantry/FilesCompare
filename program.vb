@@ -155,6 +155,7 @@ Public Class FileCompare
                                 indexes2.RemoveAt(indexes2.IndexOf(matchedIndexes(m))) 'This removes the positions of all the characters that were later matched and added to the matchedIndexes List. (If there are any)
                             End If
                         Next
+
                     End If
                     For j As Integer = string1.Length To string2.Length - 1
                         If Not matchedIndexes.Contains(j) Then
@@ -162,6 +163,7 @@ Public Class FileCompare
                         End If
                     Next
                     matchedIndexes.Clear()
+
                 ElseIf (string2.Length < string1.Length) Then
                     For j As Integer = 0 To string2.Length - 1
                         If (charMismatch = False) Then
@@ -211,6 +213,28 @@ Public Class FileCompare
                             indexes1.Add(j)
                         End If
                     Next
+                    matchedIndexes.Clear()
+                ElseIf string1.Length = string2.Length Then
+                    For j As Integer = 0 To string1.Length - 1
+                            If Not matchedIndexes.Contains(j) Then
+                                If (string1(j) = string2(j)) Then
+                                matchedIndexes.Add(j)
+                            Else
+                                indexes1.Add(j)
+                                indexes2.Add(j)
+                            End If
+                            End If
+                    Next
+                    If matchedIndexes.Count > 0 Then
+                        For m As Integer = 0 To matchedIndexes.Count - 1
+                            If indexes1.Contains(matchedIndexes(m)) Then
+                                indexes1.RemoveAt(indexes1.IndexOf(matchedIndexes(m)))
+                            End If
+                            If indexes2.Contains(matchedIndexes(m)) Then
+                                indexes2.RemoveAt(indexes2.IndexOf(matchedIndexes(m)))
+                            End If
+                        Next
+                    End If
                     matchedIndexes.Clear()
                 End If
                 charMismatch = False
@@ -263,7 +287,7 @@ Public Class FileCompare
         fd.Reset()
     End Sub
 
-    ' Public Sub SaveFile_Click(sender As Object, e As EventArgs)      'This function to be used to save the comparison in a file
+    ' Public Sub SaveFile_Click(sender As Object, e As EventArgs)      'This function to be used to save the comparison in a file. -- Yet to be developed
     '     Dim sfd As SaveFileDialog = New SaveFileDialog()
     '     sfd.InitialDirectory = "C:\"
     '     sfd.Title = "Save file"
